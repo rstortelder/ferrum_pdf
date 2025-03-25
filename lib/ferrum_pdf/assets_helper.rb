@@ -1,5 +1,7 @@
 module FerrumPdf
   module AssetsHelper
+    extend ActiveSupport::Concern
+
     class BaseAsset
       def initialize(asset)
         @asset = asset
