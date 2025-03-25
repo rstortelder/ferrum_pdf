@@ -1,3 +1,9 @@
+# About this fork
+
+This fork combines multiple pull requests to make ferrum pdf working correctly, if these are merged we can go back to the main branch:
+allow browser options to be passed to ferrum: https://github.com/excid3/ferrum_pdf/pull/8
+allow inlining assets: https://github.com/excid3/ferrum_pdf/pull/38/files
+
 # FerrumPdf
 
 PDFs & screentshots for Rails using [Ferrum](https://github.com/rubycdp/ferrum) & headless Chrome.
