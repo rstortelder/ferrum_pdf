@@ -47,21 +47,29 @@ module FerrumPdf
       end
     end
 
-    def render(host:, protocol:, html: nil, url: nil, authorize: nil, wait_for_idle_options: nil)
-      browser.create_page do |page|
-        page.network.authorize(**authorize) { |req| req.continue } if authorize
-        if html
-          page.content = FerrumPdf::HTMLPreprocessor.process(html, host, protocol)
-        else
-          page.go_to(url)
+    def render(host:, protocol:, html: nil, url: nil, authorize: nil)
+      retried = false
+      begin
+        browser.create_page do |page|
+          page.network.authorize(**authorize) { |req| req.continue } if authorize
+          if html
+            page.content = FerrumPdf::HTMLPreprocessor.process(html, host, protocol)
+          else
+            page.go_to(url)
+          end
+          page.network.wait_for_idle(**wait_for_idle_options)
+          yield page
+        ensure
+          page.close
         end
-        page.network.wait_for_idle(**wait_for_idle_options)
-        yield page
-      ensure
-        page.close
+      rescue Ferrum::DeadBrowserError
+        if !retried
+          retried = true
+          @browser = nil  # Reset the browser instance
+          retry
+        end
+        raise  # Re-raise the error if we've already retried
       end
-    rescue Ferrum::DeadBrowserError
-      retry
     end
   end
 end
