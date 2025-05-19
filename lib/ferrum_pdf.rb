@@ -47,7 +47,7 @@ module FerrumPdf
       end
     end
 
-    def render(host:, protocol:, html: nil, url: nil, authorize: nil)
+    def render(host:, protocol:, html: nil, url: nil, authorize: nil, wait_for_idle_options: nil)
       retried = false
       begin
         browser.create_page do |page|
